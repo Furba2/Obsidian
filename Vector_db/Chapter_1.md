@@ -33,13 +33,13 @@ flowchart TD
 
 ---
 
-## 2. What is a Vector?
+## 2. What is Vector?
 
-A **vector** is a list of floating-point numbers (e.g., `[0.1, 0.2, ..., 0.768]`). In a database, it is a new data type.
+**vector** is list of floating-point numbers like `[0.1, 0.2, ..., 0.768]`. In database, it's a new data type.
 
-- **In Postgres**, the `pgvector` extension adds a `VECTOR` type.
-- A `VECTOR(768)` column stores 768 floats.
-- Each float encodes some aspect of **semantic meaning**.
+- **In Postgres**,  `pgvector` extension add `VECTOR` type.
+- `VECTOR(768)` column store 768 floats.
+- Each float encode some aspect of **semantic meaning**.
 
 ```mermaid
 classDiagram
@@ -74,7 +74,7 @@ flowchart TD
     end
 ```
 
-**Key Property:** Words close in meaning map to vectors close in vector space.
+Word close in meaning map to vectors close in vector space.
 
 ```mermaid
 graph TD
@@ -112,7 +112,7 @@ graph TD
 ## 4. Key Operations on Vector Data
 
 ### 4.1 Similarity Comparison
-- **Cosine Similarity:** Measures the angle between two vectors.
+- **Cosine Similarity:** Measure angle between two vectors.
 - **Range:** -1 to 1. Identical vectors = 1.
 
 ```mermaid
@@ -153,20 +153,7 @@ graph TD
 ```
 
 ### 4.3 Vector Arithmetic
-- **Famous Example:** `Vec("King") - Vec("Man") + Vec("Woman") ≈ Vec("Queen")`
-
-```mermaid
-graph LR
-    subgraph Vector Arithmetic
-        King[King] -->|Subtract Man| K_M[King - Man]
-        K_M -->|Add Woman| Queen[Queen]
-    end
-    
-    subgraph Semantic Directions
-        Man -->|+ Royalty| King
-        Woman -->|+ Royalty| Queen
-    end
-```
+`Vec("King") - Vec("Man") + Vec("Woman") ≈ Vec("Queen")`
 
 ---
 
@@ -174,7 +161,7 @@ graph LR
 
 | Feature | SQL Database | Vector Database |
 |---------|--------------|-----------------|
-| Data Type | Integers, Strings, BCD | Vectors (floats) |
+| Data Type | Integer, String, BCD | Vectors (float) |
 | Search | Exact / Keyword | Similarity / Semantic |
 | Indexing | B-tree, GIN | HNSW, IVFFlat |
 | Operations | CRUD, Joins, Aggregations | Cosine, Euclidean, KNN |
@@ -206,7 +193,7 @@ flowchart LR
 
 ## 6. Hybrid Database Architecture
 
-Most real-world systems need **both** vector data and **structured metadata**.
+Real-world system need **both** vector data and **structured metadata**.
 
 - **Vector Store:** Optimized for ANN search (HNSW, IVFFlat).
 - **Metadata Store:** Relational tables for filtering, sorting, constraints.
@@ -237,39 +224,19 @@ flowchart TD
 
 ---
 
-## 7. Use Cases
+## 7. Use Case
 
-Vector databases power a wide range of applications:
+Vector database power wide range of application:
 
-- **Semantic Search:** Understands meaning, not just keywords.
+- **Semantic Search:** Understand meaning, not just keyword.
 - **Recommendation Systems:** Personalized content.
 - **Image/Video Retrieval:** Content-based search.
 - **NLP:** Text classification, sentiment analysis.
 - **Anomaly Detection:** Cybersecurity, fraud.
-- **Bioinformatics:** Genetic sequences.
 - **Computer Vision:** Object recognition.
 - **Audio Processing:** Music recommendation.
 - **Chatbots:** Contextual responses.
-- **Drug Discovery:** Candidate identification.
 - **Financial Analysis:** Risk assessment.
-
-```mermaid
-mindmap
-  root((Vector DB Use Cases))
-    Semantic Search
-    Recommendation Systems
-    Image/Video Retrieval
-    NLP
-      Text Classification
-      Sentiment Analysis
-    Anomaly Detection
-    Bioinformatics
-    Computer Vision
-    Audio Processing
-    Chatbots
-    Drug Discovery
-    Financial Analysis
-```
 
 ---
 

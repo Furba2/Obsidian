@@ -1,15 +1,9 @@
-# Embeddings: A Comprehensive Guide
-
-Based on Chapter 2 of the provided document, here is a clear explanation of embeddings, their history, evolution, and practical applications.
-
----
-
 ## 1. What Are Vector Embeddings?
 
-**Vector embeddings** solve a fundamental challenge: how to represent complex, unstructured data (text, images, audio, video) in a way that machines can understand and process efficiently.
+**Vector embeddings** solve a fundamental challenge: how to represent complex, unstructured data (text, images, audio, video) in way that machine can understand and process efficiently.
 
-- **Traditional data structures** work well for numbers, dates, and categorical values.
-- **Embeddings** map raw data into vectors (ordered lists of numbers) that capture **meaning** and **relationships**.
+- **Traditional data structure** work well for number, date and categorical value.
+- **Embeddings** map raw data into vectors that capture **meaning** and **relation**.
 
 ```mermaid
 flowchart LR
@@ -25,17 +19,17 @@ flowchart LR
     style D fill:#99f,stroke:#333
 ```
 
-**Key Insight:** Unlike hand-crafted feature vectors, embeddings are **learned representations** where proximity in vector space reflects semantic similarity.
+embeddings are **learned representations** where proximity in vector space reflects semantic similarity.
 
 ---
 
-## 2. The Evolution of Embeddings
+## 2. Evolution of Embeddings
 
-### 2.1 Word2Vec: The Breakthrough (2013)
+### 2.1 Word2Vec: (2013)
 
 Before Word2Vec, NLP used **sparse representations** like bag-of-words and TF-IDF, where words were discrete symbols without inherent relationships.
 
-**Word2Vec** (Mikolov et al., Google) introduced **dense vectors** in a continuous vector space where geometric relationships captured semantic relationships.
+**Word2Vec** introduce **dense vectors** in a continuous vector space where geometric relationships captured semantic relationships.
 
 ```mermaid
 graph TD
@@ -48,18 +42,17 @@ graph TD
     
     subgraph Result
         E --> F[King - Man + Woman ≈ Queen]
-        E --> G[Semantic Relationships Encoded]
+        E --> G[Semantic Relation Encoded]
     end
 ```
 
-**Key Properties:**
-- Words in similar contexts get similar vectors.
-- Vector arithmetic captures semantic relationships.
+- Words in similar context get similar vectors.
+- Vector arithmetic capture semantic relation.
 - "You shall know a word by the company it keeps." — JR Firth
 
-### 2.2 Doc2Vec: From Words to Documents (2014)
+### 2.2 Doc2Vec: (2014)
 
-**Doc2Vec** (Mikolov & Le) extended Word2Vec to represent larger text units (sentences, paragraphs, documents) as single vectors.
+**Doc2Vec** extended Word2Vec to represent larger text unit like sentence, paragraph, document as single vectors.
 
 ```mermaid
 flowchart TD
@@ -72,15 +65,15 @@ flowchart TD
     style E fill:#9f9,stroke:#333
 ```
 
-**Key Difference:** The document vector acts as additional memory, capturing global semantics that persist across all sliding windows.
+document vector act as additional memory, capturing global relation that persist across all sliding windows.
 
 ---
 
-## 3. Sparse vs. Dense Embeddings
+## 3. Sparse vs Dense Embeddings
 
 | Feature | Sparse (One-Hot, TF-IDF) | Dense (Word2Vec, Transformers) |
 |---------|--------------------------|--------------------------------|
-| **Dimensionality** | 100,000+ (vocabulary size) | 100–1,000 |
+| **Dimensiona** | 100,000+ (vocabulary size) | 100–1,000 |
 | **Values** | Mostly zeros | All meaningful |
 | **Memory** | Inefficient | Compact |
 | **Semantics** | None (just identity) | Encoded in every dimension |
@@ -107,7 +100,7 @@ graph LR
     style D1 fill:#dfd,stroke:#333
 ```
 
-**Modern Systems:** Often combine both—dense embeddings for semantic matching and sparse vectors for exact keyword matches (e.g., Elasticsearch, Vespa).
+**Modern Systems:** combine dense embeddings for semantic matching and sparse vectors for exact keyword match.
 
 ---
 
@@ -115,7 +108,7 @@ graph LR
 
 ### 4.1 The Transformer Connection
 
-Vector embeddings are the **fundamental building blocks** of modern LLMs. Every token must first be converted to a vector representation.
+Vector embeddings are **fundamental building blocks** of modern LLMs. Every token must first be converted to a vector representation.
 
 ```mermaid
 flowchart TD
@@ -135,7 +128,7 @@ flowchart TD
 ### 4.2 Three Transformer Architectures
 
 ```mermaid
-graph TD
+graph LR
     subgraph "Encoder-only BERT"
         E1["Input Tokens"] --> E2["Encoder Block"]
         E2 --> E3["Bidirectional"]
@@ -170,7 +163,7 @@ graph TD
     style X6 fill:#f9f,stroke:#333
 ```
 
-**Across all architectures:**
+**Across all architecture:**
 - **Input embeddings** convert tokens into vectors.
 - **Positional embeddings** encode sequence order.
 - **Layer embeddings** capture increasingly abstract features.
@@ -180,7 +173,7 @@ graph TD
 
 ## 5. Embedding Models: Specialized Vector Generators
 
-Dedicated embedding models (e.g., OpenAI's `text-embedding-ada-002`, Cohere's `co-embed-multilingual-v3`) are designed with a singular purpose: create high-quality vector representations for downstream applications.
+Dedicated embedding model created for high-quality vector representation.
 
 ### 5.1 Distinction from Traditional Models
 
@@ -224,15 +217,15 @@ flowchart LR
 
 ---
 
-## 6. RAG Architecture (Retrieval-Augmented Generation)
+## 6. RAG Architecture 
 
-Embedding models are essential components of the **RAG pattern**, which is transforming how we build AI applications.
+Embedding model are essential component of **RAG pattern**, which is transforming how we build AI application.
 
 ```mermaid
 flowchart TD
     subgraph "Indexing Phase offline, one-time"
         I1["Documents: PDFs, web pages, knowledge base"] --> I2["Chunking: Split into passages"]
-        I2 --> I3["Embedding Model: e.g., MiniLM"]
+        I2 --> I3["Embedding Model"]
         I3 --> I4["Vector Database: ChromaDB, Pinecone"]
     end
 
@@ -250,7 +243,7 @@ flowchart TD
     style Q2 fill:#ff9,stroke:#333
 ```
 
-**Key Insight:** The same embedding model must be used for both indexing documents and encoding queries to ensure they exist in the same vector space.
+same embedding model used for indexing document and encoding query to ensure they exist in same vector space.
 
 ---
 
@@ -277,9 +270,9 @@ mindmap
 
 ---
 
-## 8. The sentence-transformers Library
+## 8. Sentence-transformers Library
 
-The `sentence-transformers` library by SBERT.net is a workhorse of text embedding, offering pretrained models optimized for sentence embeddings.
+offer pretrained models optimized for sentence embeddings.
 
 ### 8.1 Popular Models
 
@@ -289,7 +282,7 @@ The `sentence-transformers` library by SBERT.net is a workhorse of text embeddin
 | `all-mpnet-base-v2` | 768 | ~420 MB | Moderate | Accuracy-critical |
 | `paraphrase-multilingual-mpnet-base-v2` | 768 | ~970 MB | Slower | Multilingual applications |
 
-### 8.2 Practical Example: Simple RAG Pipeline
+### 8.2 Simple RAG Pipeline
 
 ```python
 from sentence_transformers import SentenceTransformer
@@ -338,7 +331,7 @@ for doc in results['documents'][0]:
 ### 8.3 Best Practices
 
 ```mermaid
-flowchart TD
+flowchart LR
     A[Best Practices] --> B[Batch Processing]
     A --> C[Length Handling]
     A --> D[Normalization]
@@ -369,10 +362,10 @@ flowchart TD
 
 ## 9. Zero-Shot Learning with Embeddings
 
-The embedding layer enables **zero-shot learning**—the ability to generalize to new concepts without explicit training.
+generalize new concept without explicit training.
 
 ```mermaid
-flowchart TD
+flowchart LR
     A[Embedding Layer] --> B[Compositional Nature]
     A --> C[Shared Semantic Space]
     A --> D[Contextual Understanding]
@@ -388,7 +381,7 @@ flowchart TD
     D --> D2[Different embeddings for same word]
 ```
 
-**Example: Zero-Shot Classification**
+**Zero-Shot Classification**
 
 ```python
 from sentence_transformers import SentenceTransformer, util
@@ -418,7 +411,7 @@ for label, score in sorted(results.items(), key=lambda x: x[1], reverse=True):
 
 ---
 
-## 10. Vector Arithmetic with Word2Vec: Hands-On Guide
+## 10. Vector Arithmetic with Word2Vec
 
 ### 10.1 Setup
 
@@ -520,7 +513,7 @@ explore_more_analogies()
 ## 11. Limitations and Considerations
 
 ```mermaid
-flowchart TD
+flowchart LR
     A[Embedding Limitations] --> B[Quality]
     A --> C[Computational Costs]
     A --> D[Bias and Fairness]
@@ -540,7 +533,7 @@ flowchart TD
 
 ---
 
-## 12. Latest Developments and Trends
+## 12. Latest Development
 
 - **Multimodal embeddings:** Compatible embeddings across text, images, code
 - **Instruction-tuned embeddings:** Adapt embedding strategies based on instructions

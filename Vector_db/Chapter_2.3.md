@@ -1,20 +1,14 @@
-Absolutely. I’ll explain this in the same format, but first I’ll **fix the errors in the original code**. There are a few typos such as `simial_by_vector`, incorrect indentation, and malformed quotes.
 
 # 1. What are we building?
-
-We are building a small **Word2Vec exploration program**.
-
-The main idea is:
 
 ```mermaid
 flowchart TD
     A["Word"] --> B["Word2Vec"]
-    B --> C["300-dimensional vector"]
+    B --> C["300-dimension vector"]
     C --> D["Vector arithmetic"]
     D --> E["Find similar words"]
 ```
 
-For example:
 
 ```text
 king - man + woman
@@ -22,17 +16,12 @@ king - man + woman
      queen
 ```
 
-The computer doesn't actually understand the word `"king"` like a human does.
-
-Instead:
 
 ```text
 "king"
    ↓
 [0.23, -0.51, 0.72, ...]
-```
-
-Word2Vec represents words as **vectors of numbers**.
+``` 
 
 ---
 
@@ -44,29 +33,9 @@ pip install numpy
 pip install nltk
 ```
 
-## `pip`
-
-`pip` is Python's package installer.
-
-```text
-pip
- │
- └── installs Python packages
-```
-
----
-
-## `install`
-
-Means:
-
-> Download and install a package.
-
----
-
 ## `gensim`
 
-A Python library containing tools for:
+Python library containing tools for:
 
 - Word2Vec
     
@@ -83,7 +52,7 @@ A Python library containing tools for:
 
 ## `numpy`
 
-A Python library for numerical calculations.
+Python library for numerical calculation.
 
 We need it for:
 
@@ -100,13 +69,9 @@ np.linalg.norm
 
 Natural Language Toolkit.
 
-It provides tools for working with human language.
-
-**Note:** This particular code doesn't actually use NLTK, so you can omit it unless another part of your project needs it.
+provide tools for working with human language.
 
 ---
-
-# 3. Step 2 — Import libraries
 
 ```python
 import gensim.downloader as api
@@ -114,71 +79,17 @@ import numpy as np
 from typing import List, Tuple
 ```
 
-Let's break this down.
-
 ---
 
 ## `import gensim.downloader as api`
 
-### `import`
-
-Bring a Python module into your program.
-
-### `gensim`
-
-The Gensim library.
-
-### `.`
-
-Access something inside `gensim`.
+---
 
 ### `downloader`
 
 Gensim's model downloader.
 
 It lets us download pretrained models.
-
-### `as api`
-
-Give `gensim.downloader` the shorter name:
-
-```python
-api
-```
-
-So instead of:
-
-```python
-gensim.downloader.load(...)
-```
-
-we can write:
-
-```python
-api.load(...)
-```
-
----
-
-# 4. Import NumPy
-
-```python
-import numpy as np
-```
-
-`numpy` is the package.
-
-`np` is its short name.
-
-So:
-
-```python
-np.zeros()
-```
-
-means:
-
-> Use NumPy's `zeros()` function.
 
 ---
 
@@ -188,23 +99,11 @@ means:
 from typing import List, Tuple
 ```
 
-These are used to describe what type of data a function expects or returns.
-
 ### `List`
-
-Means a list.
-
-Example:
 
 ```python
 List[str]
 ```
-
-means:
-
-> A list containing strings.
-
-Example:
 
 ```text
 ["king", "queen", "man"]
@@ -213,10 +112,6 @@ Example:
 ---
 
 ### `Tuple`
-
-A tuple is a fixed group of values.
-
-Example:
 
 ```python
 ("king", 1)
@@ -230,25 +125,17 @@ string + number
 
 ---
 
-# 6. Load the pretrained Word2Vec model
+# 6. Load pretrained Word2Vec model
 
 ```python
 word2vec_model = api.load('word2vec-google-news-300')
 ```
 
-This is one of the most important lines.
-
-### `api.load()`
-
-Means:
-
-> Download/load a pretrained model.
-
 ### `'word2vec-google-news-300'`
 
-This identifies Google's pretrained Word2Vec model trained on Google News data.
+model trained on Google News data.
 
-The model contains **300-dimensional word vectors**.
+model contains **300-dimension word vectors**.
 
 Conceptually:
 
@@ -260,38 +147,6 @@ Word2Vec
 300 numbers
 
 [0.12, -0.34, 0.51, ...]
-```
-
----
-
-# 7. What does "300-dimensional" mean?
-
-Suppose we simplify the model to only 5 dimensions:
-
-```text
-king =
-[0.2, 0.7, -0.1, 0.4, 0.8]
-```
-
-Real model:
-
-```text
-king =
-[0.2, 0.7, -0.1, 0.4, ..., 0.8]
- ↑
-300 numbers
-```
-
-So:
-
-```python
-word2vec_model.vector_size
-```
-
-will give:
-
-```text
-300
 ```
 
 ---
@@ -337,41 +192,7 @@ def cosine_similarity(vec1: np.ndarray, vec2: np.ndarray) -> float:
     )
 ```
 
-This function calculates the similarity between two vectors.
-
----
-
-## `def`
-
-Defines a function.
-
----
-
-## `cosine_similarity`
-
-The function name.
-
----
-
-## `vec1`
-
-First vector.
-
-For example:
-
-```text
-[0.2, 0.5, 0.8]
-```
-
----
-
-## `vec2`
-
-Second vector.
-
-```text
-[0.3, 0.4, 0.7]
-```
+This function calculates similarity between two vectors.
 
 ---
 
@@ -379,15 +200,13 @@ Second vector.
 
 This is a NumPy array.
 
-The type hint:
-
 ```python
 vec1: np.ndarray
 ```
 
 means:
 
-> `vec1` is expected to be a NumPy array.
+> `vec1` is expected to be NumPy array.
 
 ---
 
@@ -395,9 +214,7 @@ means:
 
 Means:
 
-> This function returns a floating-point number.
-
-For example:
+> This function returns floating-point number.
 
 ```text
 0.82
@@ -415,21 +232,18 @@ similarity = ─────────────────
              |vec1| × |vec2|
 ```
 
-In Python:
 
 ```python
 np.dot(vec1, vec2)
 ```
 
-calculates the dot product.
-
-And:
+calculates dot product.
 
 ```python
 np.linalg.norm(vec1)
 ```
 
-calculates the length/magnitude of the vector.
+calculates length/magnitude of vector.
 
 So:
 
@@ -442,18 +256,7 @@ np.dot(vec1, vec2) / (
 
 calculates cosine similarity.
 
-The basic idea:
-
-```mermaid
-flowchart LR
-    A["Vector 1"] --> C["Cosine Similarity"]
-    B["Vector 2"] --> C
-    C --> D["Similarity Score"]
-```
-
 ---
-
-# 11. `find_similar_words()`
 
 ```python
 def find_similar_words(
@@ -476,7 +279,6 @@ The vector we want to search around.
 
 ## `n: int = 5`
 
-This means:
 
 ```text
 n
@@ -510,9 +312,7 @@ to request 10.
 -> List[Tuple[str, float]]
 ```
 
-means:
-
-> Return a list of tuples containing a string and a float.
+> Return list of tuples containing string and float.
 
 For example:
 
@@ -527,16 +327,6 @@ For example:
 ---
 
 # 12. Find similar words
-
-The original code says:
-
-```python
-word2vec_model.simial_by_vector(vector, topn=n)
-```
-
-There is a typo.
-
-It should be:
 
 ```python
 word2vec_model.similar_by_vector(vector, topn=n)

@@ -1,7 +1,3 @@
-Let's use the same format: **clean code → step-by-step → each important word → small examples → Mermaid diagram → complete flow.**
-
-# 1. Cleaned code
-
 ```python
 from sentence_transformers import SentenceTransformer, util
 import torch
@@ -91,7 +87,7 @@ politics
 
 The model has **not been specifically trained by you** for these four categories.
 
-Instead, it compares the meaning of the text against the meaning of each label.
+Instead, it compare meaning of text against meaning of each label.
 
 ```mermaid
 flowchart TD
@@ -109,7 +105,7 @@ flowchart TD
     I --> J["Sorted Results"]
 ```
 
-For example, the result might look approximately like:
+result look like:
 
 ```text
 technology: 0.82
@@ -118,9 +114,7 @@ sports:     0.08
 cooking:    0.03
 ```
 
-The important idea is:
-
-> **It determines which label has the most similar meaning to the input text.**
+> **It determine which label has most similar meaning to input text.**
 
 ---
 
@@ -130,29 +124,17 @@ The important idea is:
 from sentence_transformers import SentenceTransformer, util
 ```
 
-Let's break it down.
-
-### `from`
-
-Means:
-
-> Get something from a package.
-
 ### `sentence_transformers`
 
-The Python library.
-
-### `import`
-
-Bring something into your program.
+Python library.
 
 ### `SentenceTransformer`
 
-Class used to load a sentence embedding model.
+Class used to load sentence embedding model.
 
 ### `util`
 
-A collection of useful functions.
+collection of useful functions.
 
 Here we use it for:
 
@@ -176,8 +158,6 @@ sentence_transformers
 
 ---
 
-# 4. Import PyTorch
-
 ```python
 import torch
 ```
@@ -186,40 +166,18 @@ import torch
 
 PyTorch.
 
-In this particular program, you don't directly write something like:
+In this program, you don't directly write something like:
 
 ```python
 torch.tensor(...)
 ```
 
-but the embedding and similarity operations use PyTorch tensors internally.
+but embedding and similarity operations use PyTorch tensors internally.
 
 ---
 
-# 5. Create the class
-
 ```python
 class ZeroShotClassifier:
-```
-
-### `class`
-
-Creates a Python class.
-
-A class is a blueprint.
-
-### `ZeroShotClassifier`
-
-The name of our blueprint.
-
-The idea is:
-
-```text
-ZeroShotClassifier
-        │
-        ├── model
-        │
-        └── classify()
 ```
 
 ---
@@ -230,13 +188,9 @@ ZeroShotClassifier
 def __init__(self, model_name='all-mpnet-base-v2'):
 ```
 
-### `def`
-
-Defines a function.
-
 ### `__init__`
 
-Special function that runs when the object is created.
+function that runs when object is created.
 
 For example:
 
@@ -312,7 +266,7 @@ ZeroShotClassifier('all-mpnet-base-v2')
 self.model = SentenceTransformer(model_name)
 ```
 
-This creates the SentenceTransformer model.
+This creates SentenceTransformer model.
 
 ```text
 model_name
@@ -330,11 +284,11 @@ So now:
 self.model
 ```
 
-contains the embedding model.
+contains embedding model.
 
 ---
 
-# 8. Create the `classify()` function
+# 8. Create`classify()` function
 
 ```python
 def classify(self, text, candidate_labels):
@@ -370,9 +324,7 @@ text_embedding = self.model.encode(
 )
 ```
 
-This converts the text into an embedding.
-
-For example:
+This convert text into embedding.
 
 ```text
 "The quantum computer is powerful."
@@ -384,35 +336,23 @@ For example:
 [0.12, -0.42, 0.71, ...]
 ```
 
-That vector represents the **semantic meaning** of the text.
-
----
-
-## `encode()`
-
-```python
-self.model.encode(...)
-```
-
-means:
-
-> Convert text into an embedding.
+That vector represent **semantic meaning** of text.
 
 ---
 
 ## `convert_to_tensor=True`
 
-This tells the model:
+This tell model to:
 
-> Return the embedding as a PyTorch tensor.
+> Return embedding as PyTorch tensor.
 
-Instead of something like a NumPy array:
+Instead of NumPy array:
 
 ```text
 [0.12, -0.42, 0.71, ...]
 ```
 
-you get a PyTorch tensor.
+you get PyTorch tensor.
 
 This is useful because:
 
@@ -432,10 +372,6 @@ label_prompts = [
     for label in candidate_labels
 ]
 ```
-
-This is very important.
-
-Suppose:
 
 ```python
 candidate_labels = [
@@ -457,7 +393,7 @@ This text is about politics
 
 Why?
 
-Because the embedding model understands **sentences** better than isolated labels.
+Because embedding model understand **sentences** better than isolated labels.
 
 Instead of comparing:
 
@@ -477,49 +413,7 @@ we compare:
 
 ---
 
-# 11. Understanding the list comprehension
-
-```python
-[
-    f"This text is about {label}"
-    for label in candidate_labels
-]
-```
-
-This is equivalent to:
-
-```python
-label_prompts = []
-
-for label in candidate_labels:
-    label_prompts.append(
-        f"This text is about {label}"
-    )
-```
-
-If:
-
-```text
-label = "technology"
-```
-
-then:
-
-```python
-f"This text is about {label}"
-```
-
-becomes:
-
-```text
-"This text is about technology"
-```
-
-The `f` means **formatted string**.
-
----
-
-# 12. Encode the labels
+# 12. Encode labels
 
 ```python
 label_embeddings = self.model.encode(
@@ -569,60 +463,16 @@ similarities = util.pytorch_cos_sim(
 )[0]
 ```
 
-This is the mathematical heart of the program.
-
-### `util`
-
-The utility module we imported.
-
-### `pytorch_cos_sim`
-
-Means:
-
-> Calculate cosine similarity using PyTorch.
-
-### Cosine similarity
-
-It measures how similar two vectors point in meaning-space.
-
-Conceptually:
-
-```text
-Very similar
-     ↗
-    /
-   /
-  ●────────●
-
-Less similar
-  ●
-   \
-    \
-     ●
-```
-
-A simplified interpretation:
-
-```text
-1.0  → very similar
-0.5  → somewhat similar
-0.0  → little similarity
--1.0 → opposite direction
-```
-
-For embeddings, the exact score should be interpreted as a **relative similarity signal**, not automatically as a probability.
-
 ---
 
 # 14. Why `[0]`?
 
-Suppose:
 
 ```python
 util.pytorch_cos_sim(...)
 ```
 
-returns something shaped like:
+return :
 
 ```text
 [
@@ -630,13 +480,12 @@ returns something shaped like:
 ]
 ```
 
-The outer list represents the query.
 
 ```python
 [0]
 ```
 
-gets the first row:
+get the first row:
 
 ```text
 [0.82, 0.08, 0.03, 0.21]
@@ -671,7 +520,7 @@ results = {
 }
 ```
 
-This converts the labels and scores into a dictionary.
+This converts labels and scores into dictionary.
 
 ---
 
@@ -712,7 +561,7 @@ politics   → 0.21
 
 ## `float(score)`
 
-A PyTorch tensor value is converted into a normal Python floating-point number.
+PyTorch tensor value converted into  normal Python floating-point number.
 
 For example:
 
@@ -726,15 +575,11 @@ float
 
 ---
 
-# 16. Return the results
-
 ```python
 return results
 ```
 
-The function sends the dictionary back.
-
-For example:
+sends dictionary back.
 
 ```python
 {
@@ -747,13 +592,13 @@ For example:
 
 ---
 
-# 17. Create the classifier
+# 17. Create classifier
 
 ```python
 classifier = ZeroShotClassifier()
 ```
 
-This creates an object from our class.
+This creates object from our class.
 
 ```text
 ZeroShotClassifier
@@ -929,13 +774,9 @@ print(f"{label}: {score:.3f}")
 
 ### `{label}`
 
-Prints the label.
+Prints label.
 
 ### `{score:.3f}`
-
-Prints the score with **3 digits after the decimal point**.
-
-For example:
 
 ```text
 0.823719
@@ -1018,7 +859,7 @@ TEXT
  └── compare → politics   → 0.21
 ```
 
-Then the highest similarity is shown first.
+Then highest similarity is shown first.
 
 ---
 
@@ -1055,4 +896,4 @@ That's the basic idea of **zero-shot classification**.
 
 ### One-line summary
 
-> **Your code uses a pretrained SentenceTransformer to turn both the input text and candidate-label descriptions into vectors, compares them with cosine similarity, and uses the similarity scores to determine which labels are semantically closest.**
+> **This code use pretrained SentenceTransformer to turn both input text and candidate-label description into vectors, compare them with cosine similarity, and use similarity scores to determine which labels are semantically closest.**
