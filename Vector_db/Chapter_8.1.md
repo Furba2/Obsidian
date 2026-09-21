@@ -1,19 +1,14 @@
-I'll ignore all comments and explain only the executable code, **word by word and line by line**.
-
-# 1. Database tables
-
 ## `CREATE EXTENSION`
 
 ```sql
 CREATE EXTENSION IF NOT EXISTS vector;
 ```
 
-|Word|Meaning|
-|---|---|
 |`CREATE`|Make something new|
+|---|---|
 |`EXTENSION`|Add extra functionality to PostgreSQL|
 |`IF NOT EXISTS`|Only create it if it isn't already there|
-|`vector`|The pgvector extension|
+|`vector`|pgvector extension|
 
 After this, PostgreSQL understands:
 
@@ -29,8 +24,6 @@ and vector operations such as:
 
 ---
 
-# 2. `conversations` table
-
 ```sql
 CREATE TABLE conversations (
     uuid TEXT PRIMARY KEY,
@@ -39,17 +32,12 @@ CREATE TABLE conversations (
 );
 ```
 
-### `CREATE TABLE`
 
 ```text
 CREATE TABLE conversations
 ```
 
-means:
-
-> Create a database table called `conversations`.
-
-Think of a table like a spreadsheet:
+> Create database table called `conversations`.
 
 ```text
 conversations
@@ -61,13 +49,11 @@ conversations
 └──────────────┴──────────────┴──────────────┘
 ```
 
-### `uuid TEXT PRIMARY KEY`
 
 ```sql
 uuid TEXT PRIMARY KEY
 ```
 
-Breakdown:
 
 ```text
 uuid
@@ -83,13 +69,6 @@ PRIMARY KEY
 unique identifier
 ```
 
-So:
-
-```text
-uuid = "abc123"
-```
-
-Each conversation gets its own identifier.
 
 `PRIMARY KEY` means:
 
@@ -102,29 +81,14 @@ Each conversation gets its own identifier.
 
 ---
 
-### `name TEXT NOT NULL`
-
 ```sql
 name TEXT NOT NULL
 ```
 
-Means:
 
 ```text
 name → text value
 NOT NULL → must have a value
-```
-
-This is allowed:
-
-```text
-"Machine Learning"
-```
-
-This is not:
-
-```text
-NULL
 ```
 
 ---

@@ -1,19 +1,14 @@
-Absolutely. This code creates **three different layers of storage/search** in SQLite:
-
-1. `posts` → stores the original Reddit-like posts
+1. `posts` → store original Reddit-like posts
     
-2. `content_chunks` → stores smaller pieces of each post + their embeddings
+2. `content_chunks` → store smaller piece of each post + their embeddings
     
-3. `chunk_vss` → enables **vector similarity search**
+3. `chunk_vss` → enable **vector similarity search**
     
-4. `chunks_fts` → enables **keyword/full-text search**
-    
-
-I'll explain **every important word and symbol**.
+4. `chunks_fts` → enable **keyword/full-text search**
 
 ---
 
-# 1. `posts` table
+# `posts` table
 
 ```sql
 CREATE TABLE posts (
@@ -26,9 +21,6 @@ CREATE TABLE posts (
 );
 ```
 
-This creates the main table containing the original posts.
-
-## Visual idea
 
 ```mermaid
 erDiagram
@@ -56,82 +48,13 @@ One post can have **many chunks**.
 
 ---
 
-## `CREATE`
-
-```sql
-CREATE
-```
-
-Means:
-
-> Make something new.
-
-Examples:
-
-```sql
-CREATE TABLE
-CREATE INDEX
-CREATE DATABASE
-```
-
-Here we are creating a table.
-
----
-
-## `TABLE`
-
-```sql
-CREATE TABLE
-```
-
-`TABLE` tells SQLite:
-
-> The thing I want to create is a database table.
-
-So:
-
 ```sql
 CREATE TABLE posts
 ```
 
-means:
-
-> Create a table called `posts`.
+> Create table `posts`.
 
 ---
-
-# 2. `posts`
-
-```sql
-posts
-```
-
-This is the name of your table.
-
-You could name it:
-
-```sql
-posts
-reddit_posts
-documents
-articles
-```
-
-Here you chose:
-
-```text
-posts
-```
-
----
-
-# 3. Opening `(`
-
-```sql
-(
-```
-
-This starts the list of columns.
 
 Everything between:
 
@@ -141,23 +64,15 @@ Everything between:
 )
 ```
 
-describes the table's columns.
+describes table columns.
 
 ---
-
-# 4. `post_id TEXT PRIMARY KEY`
 
 ```sql
 post_id TEXT PRIMARY KEY,
 ```
 
-This defines a column called `post_id`.
-
-### `post_id`
-
-The column name.
-
-For example:
+>define column `post_id`
 
 |post_id|
 |---|
@@ -167,15 +82,13 @@ For example:
 
 ---
 
-### `TEXT`
 
 ```sql
 post_id TEXT
 ```
 
-means the column stores text.
+>column store text.
 
-Example:
 
 ```text
 "abc123"
@@ -191,16 +104,14 @@ Example:
 post_id TEXT PRIMARY KEY
 ```
 
-means `post_id` uniquely identifies each post.
-
-For example:
+> `post_id` unique for each post.
 
 |post_id|title|
 |---|---|
 |`abc123`|Python question|
 |`xyz789`|ML question|
 
-You cannot have:
+can't have:
 
 ```text
 abc123
@@ -209,25 +120,13 @@ abc123
 
 for two different rows.
 
-Think of it as:
-
-```text
-post_id
-   ↓
-unique identity of the post
-```
-
 ---
-
-# 5. `title TEXT`
 
 ```sql
 title TEXT,
 ```
 
-Stores the post title.
-
-Example:
+Store post title.
 
 ```text
 "How does FAISS work?"
@@ -235,15 +134,12 @@ Example:
 
 ---
 
-# 6. `content TEXT`
-
 ```sql
 content TEXT,
 ```
 
-Stores the complete post content.
+Store post content.
 
-Example:
 
 ```text
 "I am learning vector databases.
@@ -252,15 +148,11 @@ How does similarity search work?"
 
 ---
 
-# 7. `subreddit TEXT`
-
 ```sql
 subreddit TEXT,
 ```
 
-Stores the subreddit.
-
-Example:
+Store subreddit.
 
 ```text
 "MachineLearning"
@@ -270,15 +162,11 @@ Example:
 
 ---
 
-# 8. `author TEXT`
-
 ```sql
 author TEXT,
 ```
 
-Stores the author's name.
-
-Example:
+Store author's name.
 
 ```text
 "john123"
@@ -288,15 +176,9 @@ Example:
 
 ---
 
-# 9. `score INTEGER`
-
 ```sql
 score INTEGER
 ```
-
-Stores an integer score.
-
-For example:
 
 ```text
 125
@@ -305,35 +187,18 @@ For example:
 1000
 ```
 
-`INTEGER` means whole numbers.
-
-Not:
-
-```text
-12.5
-```
-
-but:
-
-```text
-12
-```
-
 ---
-
-# 10. `);`
 
 ```sql
 );
 ```
 
-The `)` ends the column definitions.
+>`)` end column definition.
 
-The `;` means:
+`;` 
 
-> The SQL statement is finished.
+>  SQL statement is finished.
 
-So the whole thing:
 
 ```sql
 CREATE TABLE posts (
@@ -341,15 +206,9 @@ CREATE TABLE posts (
 );
 ```
 
-means:
-
-> Create a table called `posts` with these columns.
+> Create table `posts` with these columns.
 
 ---
-
-# 11. `content_chunks`
-
-Now we have:
 
 ```sql
 CREATE TABLE content_chunks (
@@ -362,11 +221,9 @@ CREATE TABLE content_chunks (
 );
 ```
 
-This table breaks large posts into smaller pieces.
+> This table break large posts into smaller pieces.
 
-Why?
-
-Because embedding a huge document as one vector isn't always ideal.
+> Because embedding huge document as one vector isn't ideal.
 
 Instead:
 
@@ -383,15 +240,11 @@ Each chunk gets its own embedding.
 
 ---
 
-# 12. `chunk_id INTEGER PRIMARY KEY`
-
 ```sql
 chunk_id INTEGER PRIMARY KEY,
 ```
 
-Each chunk gets a unique integer ID.
-
-Example:
+Each chunk gets unique integer ID.
 
 |chunk_id|
 |--:|
@@ -399,8 +252,6 @@ Example:
 |2|
 |3|
 |4|
-
-Because it's:
 
 ```sql
 PRIMARY KEY
@@ -410,17 +261,9 @@ each ID must be unique.
 
 ---
 
-# 13. `post_id TEXT`
-
 ```sql
 post_id TEXT,
 ```
-
-This tells us:
-
-> Which post does this chunk belong to?
-
-Example:
 
 |chunk_id|post_id|
 |--:|---|
@@ -443,15 +286,9 @@ xyz789
 
 ---
 
-# 14. `chunk_index INTEGER`
-
 ```sql
 chunk_index INTEGER,
 ```
-
-This stores the position of the chunk inside the original post.
-
-For example:
 
 |chunk_id|post_id|chunk_index|
 |--:|---|--:|
@@ -459,7 +296,6 @@ For example:
 |2|abc123|1|
 |3|abc123|2|
 
-So:
 
 ```text
 Post abc123
@@ -477,19 +313,13 @@ chunk 2
 "The third part..."
 ```
 
-This lets you reconstruct the original order.
+This lets you reconstruct original order.
 
 ---
-
-# 15. `content TEXT`
 
 ```sql
 content TEXT,
 ```
-
-This contains the actual chunk text.
-
-For example:
 
 ```text
 chunk 0:
@@ -504,25 +334,15 @@ chunk 2:
 
 ---
 
-# 16. `chunk_vector BLOB`
-
-This is one of the most important lines:
-
 ```sql
 chunk_vector BLOB,
 ```
-
-A **vector embedding** is stored here.
-
-For example, an embedding might conceptually look like:
 
 ```text
 [0.12, -0.42, 0.73, 0.08, ...]
 ```
 
-Your vector has **384 numbers**.
-
-Because SQLite doesn't have a native pgvector-style vector type here, the vector is stored as:
+Because SQLite doesn't have native pgvector-style vector type here, vector is stored as:
 
 ```text
 BLOB
@@ -530,15 +350,11 @@ BLOB
 
 ---
 
-## What is `BLOB`?
-
-BLOB means:
+## `BLOB`
 
 > Binary Large Object
 
-It stores raw binary data.
-
-For example:
+store raw binary data.
 
 ```text
 Python list
@@ -554,24 +370,16 @@ SQLite BLOB
 
 ---
 
-# 17. `FOREIGN KEY`
-
 ```sql
 FOREIGN KEY (post_id)
 ```
 
-This tells SQLite:
-
 > `content_chunks.post_id` is connected to another table.
-
-Specifically:
 
 ```sql
 FOREIGN KEY (post_id)
 REFERENCES posts(post_id)
 ```
-
-means:
 
 ```text
 content_chunks.post_id
@@ -581,50 +389,9 @@ content_chunks.post_id
 posts.post_id
 ```
 
-So you have a relationship between the tables.
+So you have relation between tables.
 
 ---
-
-# 18. Why use a foreign key?
-
-Suppose:
-
-```text
-posts
-
-post_id
--------
-abc123
-xyz789
-```
-
-Then this is valid:
-
-```text
-content_chunks
-
-chunk_id | post_id
----------|--------
-1        | abc123
-2        | abc123
-3        | xyz789
-```
-
-But this would be problematic:
-
-```text
-chunk_id | post_id
----------|--------
-4        | DOES_NOT_EXIST
-```
-
-because there is no corresponding post.
-
----
-
-# 19. Vector Search Virtual Table
-
-Now we get to the interesting part:
 
 ```sql
 CREATE VIRTUAL TABLE chunk_vss USING vss0(
@@ -633,7 +400,7 @@ CREATE VIRTUAL TABLE chunk_vss USING vss0(
 );
 ```
 
-This creates a **vector search table**.
+ creates **vector search table**.
 
 ---
 
@@ -643,13 +410,7 @@ This creates a **vector search table**.
 CREATE VIRTUAL TABLE
 ```
 
-A virtual table is different from a normal SQLite table.
-
-It is provided by an SQLite extension.
-
-Instead of SQLite handling everything itself, an extension can implement specialized behavior.
-
-Here:
+virtual table is different from normal SQLite table.
 
 ```text
 SQLite
@@ -661,47 +422,13 @@ SQLite
 
 ---
 
-# 21. `chunk_vss`
-
 ```sql
 chunk_vss
 ```
 
-This is the name of the virtual table.
-
-You could call it:
-
-```text
-vector_search
-chunk_vectors
-embeddings
-```
-
-Here:
-
-```text
-chunk_vss
-```
-
-`vss` generally means:
-
-> Vector Similarity Search
+name of virtual table.
 
 ---
-
-# 22. `USING vss0`
-
-```sql
-USING vss0
-```
-
-This tells SQLite:
-
-> Create this virtual table using the `vss0` module.
-
-`vss0` comes from the vector-search extension.
-
-Conceptually:
 
 ```text
 CREATE VIRTUAL TABLE
@@ -721,66 +448,19 @@ Vector Similarity Search
 
 ---
 
-# 23. `chunk_vector(384)`
-
 ```sql
 chunk_vector(384)
 ```
 
-This is extremely important.
-
-The:
-
-```text
-384
-```
-
-means your vectors have **384 dimensions**.
-
-For example:
-
-```text
-Vector 1:
-
-[
-  0.12,
-  -0.42,
-  0.73,
-  ...
-]
-```
-
-There are 384 numbers total.
-
-So:
-
-```text
-chunk_vector(384)
-```
-
-means:
-
-> Store/search vectors with 384 dimensions.
-
-This matches models such as:
-
-```text
-all-MiniLM-L6-v2
-```
-
-which produces 384-dimensional embeddings.
+> Store vectors with 384 dimension.
 
 ---
-
-# 24. `chunk_id INTEGER`
 
 ```sql
 chunk_id INTEGER
 ```
 
-This connects the vector-search record to the actual chunk.
-
-Think:
+This connet vector-search record to  actual chunk.
 
 ```text
 Vector Search Table
@@ -788,15 +468,11 @@ Vector Search Table
 chunk_id → vector
 ```
 
-and:
-
 ```text
 content_chunks
 
 chunk_id → text
 ```
-
-So:
 
 ```mermaid
 flowchart LR
@@ -805,13 +481,9 @@ flowchart LR
     B -->|"chunk_id = 42"| D["384-dimensional vector"]
 ```
 
-The same `chunk_id` connects the text and vector.
+same `chunk_id` connect text and vector.
 
 ---
-
-# 25. FTS5 Virtual Table
-
-Finally:
 
 ```sql
 CREATE VIRTUAL TABLE chunks_fts USING fts5(
@@ -821,25 +493,19 @@ CREATE VIRTUAL TABLE chunks_fts USING fts5(
 );
 ```
 
-This creates a **full-text search index**.
-
-FTS5 means:
+FTS5
 
 > Full-Text Search 5
 
-It is SQLite's full-text-search system.
+>SQLite's full-text-search system.
 
 ---
-
-# 26. `chunks_fts`
 
 ```sql
 chunks_fts
 ```
 
-This is the name of the FTS table.
-
-It is designed for searches like:
+name of  FTS table designed for searches like:
 
 ```text
 machine learning
@@ -851,49 +517,21 @@ vector database
 
 ---
 
-# 27. `USING fts5`
-
-```sql
-USING fts5
-```
-
-This tells SQLite:
-
-> Use SQLite's FTS5 search engine.
-
-So:
-
-```text
-chunks_fts
-      │
-      ↓
-    FTS5
-      │
-      ↓
-keyword/full-text search
-```
-
----
-
-# 28. `content`
-
 ```sql
 content,
 ```
 
-This tells FTS5 that the searchable column is:
+tell FTS5 that searchable column is:
 
 ```text
 content
 ```
 
-For example:
-
 ```text
 "FAISS is useful for vector similarity search."
 ```
 
-FTS5 can index the words:
+FTS5 can index words:
 
 ```text
 FAISS
@@ -905,24 +543,16 @@ search
 
 ---
 
-# 29. `content='content_chunks'`
-
-This is an important special setting:
-
 ```sql
 content='content_chunks'
 ```
 
-It means:
-
-> The actual text lives in the `content_chunks` table.
+> actual text lives in `content_chunks` table.
 
 So `chunks_fts` is essentially an **index over another table**.
 
-Conceptually:
-
 ```mermaid
-flowchart LR
+flowchart TD
     A["content_chunks"] -->|"content"| B["chunks_fts"]
     B --> C["FTS5 keyword index"]
 ```
@@ -948,19 +578,12 @@ content_chunks
 
 ---
 
-# 30. `content_rowid='chunk_id'`
-
 ```sql
 content_rowid='chunk_id'
 ```
 
-This tells FTS5:
-
-> The row identifier in `content_chunks` is `chunk_id`.
-
-So FTS5 knows how its search result corresponds to the original chunk.
-
-For example:
+> row identifier in `content_chunks` is `chunk_id`.
+> 
 
 ```text
 content_chunks
@@ -975,13 +598,11 @@ FTS5 can return:
 chunk_id = 42
 ```
 
-and you can then retrieve the actual chunk.
+then retrieve actual chunk.
 
 ---
 
-# 31. The entire architecture
-
-Now put everything together:
+# Entire architecture
 
 ```mermaid
 flowchart TD
@@ -1007,61 +628,11 @@ flowchart TD
     L --> M["Retrieve original content"]
 ```
 
-You essentially have **two search engines over the same chunks**.
+**two search engines over same chunks**.
 
 ---
 
-# 32. Vector search vs keyword search
-
-This is the key idea.
-
-Suppose your chunk says:
-
-```text
-"Neural networks can learn complex patterns from data."
-```
-
-A user searches:
-
-```text
-How can computers learn complicated patterns?
-```
-
-### Vector search
-
-The words are different:
-
-```text
-user:
-"computers learn complicated patterns"
-
-document:
-"neural networks can learn complex patterns"
-```
-
-But the meanings are similar.
-
-Embedding search can potentially find it.
-
----
-
-### Keyword search
-
-FTS5 looks for actual terms.
-
-For example:
-
-```text
-neural network
-```
-
-It can efficiently find chunks containing those terms.
-
----
-
-# 33. Hybrid search
-
-Your architecture therefore allows:
+# Hybrid search
 
 ```mermaid
 flowchart TD
@@ -1103,8 +674,6 @@ Finds exact/relevant words.
 
 ### 3. Metadata filtering
 
-For example:
-
 ```sql
 WHERE subreddit = 'MachineLearning'
 AND score > 100
@@ -1112,9 +681,7 @@ AND score > 100
 
 ---
 
-# 34. One important relationship
-
-Your tables are connected like this:
+# tables are connected like this:
 
 ```text
 posts
@@ -1156,9 +723,7 @@ post_id = "abc123"
 
 ---
 
-# 35. Why split into chunks?
-
-Imagine a post has 10,000 words.
+# Why split into chunks?
 
 Instead of:
 
@@ -1168,7 +733,7 @@ Instead of:
    1 vector
 ```
 
-you do:
+you :
 
 ```text
 10,000 words
@@ -1190,11 +755,11 @@ split
 each chunk → embedding
 ```
 
-Then a query can find the **specific relevant section**, rather than retrieving the entire post.
+query can find **specific relevant section**, rather than retrieving entire post.
 
 ---
 
-# 36. Complete data flow
+# Complete data flow
 
 Suppose you have this post:
 
@@ -1223,10 +788,9 @@ chunk 2:
 "Gradient descent updates weights..."
 ```
 
-Then:
 
 ```mermaid
-flowchart TD
+flowchart LR
     A["Post 123"] --> B["Chunk 0"]
     A --> C["Chunk 1"]
     A --> D["Chunk 2"]
@@ -1248,16 +812,13 @@ Now your system can search both **meaning** and **words**.
 
 ---
 
-# 37. The four components at a glance
-
 |Component|Purpose|Example|
 |---|---|---|
-|`posts`|Original posts|title, author, score|
-|`content_chunks`|Smaller text pieces|chunk text + vector|
+|`posts`|Original post|title, author, score|
+|`content_chunks`|Small text piece|chunk text + vector|
 |`chunk_vss`|Vector similarity search|"similar meaning"|
 |`chunks_fts`|Full-text search|matching words|
 
-The important distinction is:
 
 ```text
 content_chunks
@@ -1272,7 +833,3 @@ chunks_fts
       ↓
 keyword search
 ```
-
-So this design is building a **hybrid retrieval system**:
-
-> **SQLite + chunks + embeddings + vector search + full-text search + metadata.**
