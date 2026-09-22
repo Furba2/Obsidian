@@ -7,7 +7,7 @@ flowchart TD
 
 ---
 
-## Why  Text Editor? (Not Excel or Word)
+## Why  Text Editor?
 
 ```mermaid
 flowchart TD
