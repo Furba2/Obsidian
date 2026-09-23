@@ -1,25 +1,15 @@
-# Joining Tables in a Relational Database — Concepts, Tables & Diagrams
 
-Below is a complete breakdown of every concept in the chapter, organized with Markdown tables and Mermaid diagrams.
-
----
-
-## 1. Core Concepts Overview
-
-| Concept | Definition | Key Points |
-|---|---|---|
-| **Relational Database** | An application that supports data stored across multiple, related tables. | Each table holds data on a single entity; rows describe one entity. |
-| **Table Join** | A process that links rows in one table to rows in other tables. | Uses `JOIN ... ON` construct. |
-| **Primary Key** | A column (or collection of columns) whose values uniquely identify each row. | Must be unique; cannot be NULL. |
-| **Foreign Key** | A column that references a primary key (or unique column) in another table. | Can be empty; can contain duplicates; enforces referential integrity. |
-| **UNIQUE Constraint** | Guarantees values in a column (or combination) are unique. | Helps avoid duplicate data; can form a natural key. |
-| **NULL** | A special value representing no data or unknown data. | Different from `0` or `''`; usable across data types. |
-| **Normalization** | Organizing data across several tables to reduce redundancy. | Doesn't prevent viewing data as a whole via JOIN. |
+| Concept                 | Definition                                                             | Key Points                                                            |
+| ----------------------- | ---------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| **Relational Database** | application that supports data stored across multiple, related tables. | Each table holds data on a single entity; rows describe one entity.   |
+| **Table Join**          | links rows in one table to rows in other tables.                       | Uses `JOIN ... ON` construct.                                         |
+| **Primary Key**         | column whose values uniquely identify each row.                        | Must be unique; cannot be NULL.                                       |
+| **Foreign Key**         | column that references a primary in another table.                     | Can be empty; can contain duplicates; enforces referential integrity. |
+| **UNIQUE Constraint**   | Guarantees values in a column (or combination) are unique.             | Helps avoid duplicate data; can form a natural key.                   |
+| **NULL**                | A special value representing no data or unknown data.                  | Different from `0` or `''`; usable across data types.                 |
+| **Normalization**       | Organizing data across several tables to reduce redundancy.            | Doesn't prevent viewing data as a whole via JOIN.                     |
 
 ---
-
-## 2. The Two Example Tables (`departments` & `employees`)
-
 ### `departments` Table
 
 | dept_id (PK) | dept | city |
@@ -36,7 +26,6 @@ Below is a complete breakdown of every concept in the chapter, organized with Ma
 | 3 | Arthur | Pappas | 72700.00 | 2 |
 | 4 | Michael | Taylor | 89500.00 | 2 |
 
-### Relationship Diagram
 
 ```mermaid
 erDiagram
