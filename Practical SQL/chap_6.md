@@ -1,13 +1,9 @@
-# Basic Math and Stats with SQL — Explained Simply
-
-This chapter is about **doing math on your data**. You'll learn everything from simple addition to finding averages, medians, and modes — the building blocks of data analysis.
+# Basic Math and Stats with SQL
 
 ---
 
-## 🎯 The Big Picture: Math Operations in SQL
-
 ```mermaid
-flowchart TD
+flowchart LR
     A[SQL Math] --> B[Basic Operators]
     A --> C[Math Functions]
     A --> D[Aggregate Functions]
@@ -18,35 +14,13 @@ flowchart TD
 
 ---
 
-## 1️⃣ Basic Math Operators
-
-```mermaid
-mindmap
-  root((Math Operators))
-    Standard ANSI
-      Addition +
-      Subtraction -
-      Multiplication *
-      Division /
-    PostgreSQL-Specific
-      Modulo %
-      Exponentiation ^
-      Square root |/
-      Cube root ||/
-      Factorial !
-```
-
-### Simple Examples (Listing 6-1)
-
 ```sql
 SELECT 2 + 2;    -- Returns 4
 SELECT 9 - 1;    -- Returns 8
 SELECT 3 * 4;    -- Returns 12
 ```
 
-> 💡 You can do math **without a table** — just `SELECT` the expression.
-
-**Output column name is `?column?`** unless you use an alias:
+**Output column name `?column?`** unless you use an alias:
 ```sql
 SELECT 3 * 4 AS result;  -- Column named "result"
 ```

@@ -1,53 +1,24 @@
-# Importing and Exporting Data — Explained Simply
 
-This chapter is about **moving data in bulk**. Instead of typing one row at a time with `INSERT`, you'll learn to load thousands (or millions) of rows from a file — and export them back out.
-
----
-
-## 🎯 The Big Picture: Bulk Data Movement
 
 ```mermaid
-flowchart LR
+flowchart TD
     A[📄 CSV File] -->|COPY FROM| B[🗄️ PostgreSQL Table]
     B -->|COPY TO| C[📄 CSV File]
 ```
 
 - **`COPY ... FROM`** = Import data INTO a table
 - **`COPY ... TO`** = Export data OUT of a table
-- **Delimited text file** = The universal middle-ground format
 
 ---
 
-## 📄 Delimited Text Files — The Universal Format
-
-A **delimited text file** has:
+## 📄 **delimited text file** has:
 - One row of data per line
-- Each column separated (delimited) by a character (usually a comma)
+- Each column separated (delimited) by character (comma)
 
 ```csv
 FIRSTNAME,LASTNAME,STREET,CITY,STATE,PHONE
 John,Doe,123 Main St.,Hyde Park,NY,845-555-1212
 ```
-
-```mermaid
-mindmap
-  root((Delimited Files))
-    CSV
-      Comma-separated
-      Most common
-    TSV
-      Tab-separated
-    Pipe-delimited
-      Uses | character
-    Header Row
-      Optional
-      Lists column names
-    Text Qualifier
-      Usually double quotes
-      Handles commas inside values
-```
-
-### Handling Header Rows
 
 ```mermaid
 flowchart TD
@@ -57,7 +28,7 @@ flowchart TD
     C --> E[Import starts at line 2]
 ```
 
-### Quoting Columns with Commas
+---
 
 ```csv
 FIRSTNAME,LASTNAME,STREET,CITY,STATE,PHONE
@@ -65,19 +36,13 @@ John,Doe,"123 Main St., Apartment 200",Hyde Park,NY,845-555-1212
 ```
 
 ```mermaid
-flowchart LR
+flowchart TD
     A["123 Main St., Apartment 200"] --> B[Double quotes wrap the value]
     B --> C[Comma inside is ignored]
     C --> D[Treated as ONE column]
 ```
 
-> 💡 **Text qualifier** = the character (usually `"`) that tells the database to ignore delimiters inside.
-
 ---
-
-## 📥 Importing Data with COPY
-
-### The Three-Step Process
 
 ```mermaid
 flowchart TD
@@ -86,7 +51,7 @@ flowchart TD
     C --> D[✅ Data imported]
 ```
 
-### Basic COPY Syntax (Listing 5-1)
+---
 
 ```sql
 COPY table_name
@@ -94,14 +59,6 @@ FROM 'C:\YourDirectory\your_file.csv'
 WITH (FORMAT CSV, HEADER);
 ```
 
-```mermaid
-flowchart LR
-    A[COPY] --> B[table_name]
-    B --> C[FROM 'file path']
-    C --> D[WITH options]
-```
-
-### Common COPY Options
 
 | Option | Purpose |
 |--------|---------|
@@ -119,7 +76,7 @@ flowchart LR
 - **16 columns** (population estimates, geography, etc.)
 - File: `us_counties_pop_est_2019.csv`
 
-### Creating the Table (Listing 5-2)
+### Creating Table 
 
 ```sql
 CREATE TABLE us_counties_pop_est_2019 (
@@ -143,11 +100,11 @@ CREATE TABLE us_counties_pop_est_2019 (
 );
 ```
 
-### Data Type Choices Explained
+
 
 ```mermaid
-flowchart TD
-    A[Column Type Decisions] --> B[state_fips: text]
+flowchart LR
+    A[Column Type] --> B[state_fips: text]
     A --> C[region: smallint]
     A --> D[area_land: bigint]
     A --> E[lat/lon: numeric 10,7]
@@ -159,9 +116,8 @@ flowchart TD
     F --> K[Under 2.1 billion]
 ```
 
-> 💡 **Key insight:** Codes (like FIPS) are **text**, not numbers. Alaska's `02` would become `2` if stored as integer.
+> 💡FIPS are **text**, not numbers. Alaska's `02` would become `2` if stored as integer.
 
-### Performing the Import (Listing 5-3)
 
 ```sql
 COPY us_counties_pop_est_2019
@@ -175,7 +131,6 @@ COPY 3142
 Query returned successfully in 75 msec.
 ```
 
-### Inspecting the Import
 
 ```sql
 -- Check largest land areas
@@ -185,7 +140,6 @@ ORDER BY area_land DESC
 LIMIT 3;
 ```
 
-**Output:**
 | county_name | state_name | area_land |
 |-------------|------------|-----------|
 | Yukon-Koyukuk Census Area | Alaska | 377038836685 |
@@ -203,7 +157,7 @@ ORDER BY internal_point_lon DESC
 LIMIT 5;
 ```
 
-**Output:**
+
 | county_name | state_name | internal_point_lon |
 |-------------|------------|---------------------|
 | Aleutians West Census Area | Alaska | 179.6211882 |
@@ -223,9 +177,7 @@ flowchart LR
 
 ## 🔧 Advanced Import Techniques
 
-### 1️⃣ Importing a Subset of Columns (Listing 5-5)
-
-**Scenario:** CSV only has 3 columns, but table has 7.
+CSV only has 3 columns, but table has 7.
 
 ```sql
 COPY supervisor_salaries (town, supervisor, salary)
@@ -234,7 +186,7 @@ WITH (FORMAT CSV, HEADER);
 ```
 
 ```mermaid
-flowchart LR
+flowchart TD
     A[CSV: town, supervisor, salary] --> B[Map to specific columns]
     B --> C[Other columns: NULL or auto]
     C --> D[id auto-filled by IDENTITY]
@@ -242,7 +194,6 @@ flowchart LR
 
 > ⚠️ **Error if you don't specify columns:** PostgreSQL tries to fill `id` with `"Anytown"` → fails.
 
-### 2️⃣ Importing a Subset of Rows (Listing 5-6)
 
 ```sql
 COPY supervisor_salaries (town, supervisor, salary)
@@ -260,9 +211,9 @@ flowchart TD
 
 > 💡 **PostgreSQL 12+** supports `WHERE` in `COPY`.
 
-### 3️⃣ Adding a Value During Import (Listing 5-7)
+### Adding a Value During Import 
 
-**Scenario:** CSV lacks `county`, but you know it should be `'Mills'`.
+ CSV lacks `county`, but you know it should be `'Mills'`.
 
 ```sql
 -- Step 1: Create temp table
@@ -297,7 +248,6 @@ flowchart TD
 
 ## 📤 Exporting Data with COPY
 
-### The Three Export Types
 
 ```mermaid
 flowchart TD
@@ -306,7 +256,7 @@ flowchart TD
     A --> D[Query Results]
 ```
 
-### 1️⃣ Export Entire Table (Listing 5-8)
+### Export Entire Table
 
 ```sql
 COPY us_counties_pop_est_2019
@@ -314,13 +264,13 @@ TO 'C:\YourDirectory\us_counties_export.txt'
 WITH (FORMAT CSV, HEADER, DELIMITER '|');
 ```
 
-**Output file:**
+
 ```
 state_fips|county_fips|region|state_name|county_name|...
 01|001|3|Alabama|Autauga County|...
 ```
 
-### 2️⃣ Export Selected Columns (Listing 5-9)
+### Export Selected Columns 
 
 ```sql
 COPY us_counties_pop_est_2019
@@ -335,7 +285,7 @@ flowchart LR
     B --> C[Export only those]
 ```
 
-### 3️⃣ Export Query Results (Listing 5-10)
+### Export Query Results
 
 ```sql
 COPY (
@@ -347,7 +297,6 @@ TO 'C:\YourDirectory\us_counties_mill_export.csv'
 WITH (FORMAT CSV, HEADER);
 ```
 
-**Output:**
 ```
 county_name,state_name
 Miller County,Arkansas
@@ -356,31 +305,7 @@ Vermillion County,Indiana
 ...
 ```
 
-> 💡 **Powerful:** Any `SELECT` query can be exported!
-
 ---
-
-## 🖥️ pgAdmin Import/Export Wizard
-
-**When to use it:** When PostgreSQL is on a **remote server** (cloud) and `COPY` can't see your local files.
-
-```mermaid
-flowchart TD
-    A[pgAdmin Object Browser] --> B[Right-click table]
-    B --> C[Import/Export]
-    C --> D{Import or Export?}
-    D -->|Import| E[Pick CSV file]
-    D -->|Export| F[Pick output path]
-    E --> G[Set format options]
-    F --> G
-    G --> H[Click OK]
-```
-
-> 💡 pgAdmin's wizard uses `\copy` behind the scenes — a friendlier face for the same functionality.
-
----
-
-## 🧩 Complete Import/Export Decision Flow
 
 ```mermaid
 flowchart TD
@@ -403,8 +328,6 @@ flowchart TD
 
 ---
 
-## ✅ Chapter 5 Checklist
-
 | Task | Command |
 |------|---------|
 | Import all columns | `COPY table FROM 'file.csv' WITH (FORMAT CSV, HEADER);` |
@@ -418,8 +341,6 @@ flowchart TD
 
 ---
 
-## 🎯 Key Takeaways
-
 1. **CSV is the universal format** — every tool can read/write it
 2. **`COPY` is fast** — built for bulk operations
 3. **Codes are text, not numbers** — FIPS codes need leading zeros
@@ -428,5 +349,3 @@ flowchart TD
 6. **`COPY` can export queries** — wrap any `SELECT` in parentheses
 7. **Remote servers need pgAdmin** — `COPY` can only see local files
 8. **Always inspect after import** — check row counts and sample data
-
-> In **Chapter 6**, you'll learn **math functions** to analyze your newly imported data — counting, summing, averaging, and more. 🚀
